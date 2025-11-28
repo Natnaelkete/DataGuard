@@ -19,18 +19,14 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: gradle
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Download gradle-wrapper.jar
-        run: |
-          mkdir -p gradle/wrapper
-          curl -L https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.9
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: gradle build
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
@@ -83,18 +79,14 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: gradle
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Download gradle-wrapper.jar
-        run: |
-          mkdir -p gradle/wrapper
-          curl -L https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.9
 
       - name: Run Lint
-        run: ./gradlew lint
+        run: gradle lint
 
       - name: Upload Lint Reports
         if: always()
