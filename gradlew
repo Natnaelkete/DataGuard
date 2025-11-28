@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Copyright ? 2015-2021 the original authors.
+# Copyright 2015 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -174,19 +174,8 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     fi
     # Split up the JVM_OPTS And GRADLE_OPTS values into an array, following the shell quoting and substitution rules
     # to make sure that they still are split up correctly
-    local arguments=()
-    IFS=$'\n'
-    for arg in $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS ; do
-        if [[ $arg =~ ^-.*\.jar$ ]] ; then
-            arguments+=( "$arg" )
-        else
-            arguments+=( "$(cygpath --unix "$arg")" )
-        fi
-    done
-    IFS=
-    # Now convert the arguments back to Windows format (space and all) that we can pass to java
     i=0
-    for arg in "${arguments[@]}" ; do
+    for arg in $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS ; do
         arg=`cygpath --windows "$arg"`
         args="$args \"$arg\""
         i=$((i+1))
@@ -194,13 +183,9 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     printf '%s\n' "$args"
 else
     for arg do
-        if [[ $arg =~ ^-.*\.jar$ ]] ; then
-            args+=( "$arg" )
-        else
-            args+=( "$(printf '%s\n' "$arg" | sed -e 's/[][]/\\&/g')" )
-        fi
+        args="$args \"$arg\""
     done
-    printf '%s\n' "${args[@]}"
+    printf '%s\n' "$args"
 fi
 
 # Collect all arguments for the java command;
