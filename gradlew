@@ -219,6 +219,7 @@ fi
 # IFS needs to be saved before the command substitution below so that it takes precedence
 # over a user defined IFS which has the last non-newline character as IFS.
 # This is the "true" terminal "new line" character.
+SAVED_IFS="$IFS"
 IFS="$(printf '\n')"
 eval "set -- $(printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" | xargs printf '%s\n')" -- "$(printf '%s\n' "$@" | xargs printf '%s\n')"
 IFS="$SAVED_IFS"
