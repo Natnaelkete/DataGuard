@@ -24,6 +24,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Download gradle-wrapper.jar
+        run: |
+          mkdir -p gradle/wrapper
+          curl -L https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+
       - name: Build with Gradle
         run: ./gradlew build
 
@@ -82,6 +87,11 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Download gradle-wrapper.jar
+        run: |
+          mkdir -p gradle/wrapper
+          curl -L https://github.com/gradle/gradle/raw/v8.7.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
 
       - name: Run Lint
         run: ./gradlew lint
