@@ -1,9 +1,10 @@
 package com.dataguard.di
 
-import com.dataguard.data.repository.DataRepository
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -13,5 +14,5 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideDataRepository(repository: DataRepository): DataRepository = repository
+    fun provideContext(@ApplicationContext context: Context): Context = context
 }
