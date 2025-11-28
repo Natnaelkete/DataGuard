@@ -24,12 +24,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Workaround for R8 ConcurrentModificationException
+            // Disable minification due to R8 ConcurrentModificationException
             isShrinkResources = false
         }
     }
