@@ -188,39 +188,9 @@ else
     printf '%s\n' "$args"
 fi
 
-# Collect all arguments for the java command;
-#   * $DEFAULT_JVM_OPTS, $JAVA_OPTS, and $GRADLE_OPTS can contain fragments of
-#     shell commands, so put them in double quotes to make sure that they get
-#     re-expanded; and
-#   * put everything else in single quotes, so that it's not re-expanded.
-
-set -- \
+# Collect all arguments for the java command
+exec "$JAVACMD" $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS \
         "-Dorg.gradle.appname=$APP_BASE_NAME" \
         -classpath "$CLASSPATH" \
         org.gradle.wrapper.GradleWrapperMain \
         "$@"
-
-# Stop when "xargs" is not available.
-if ! command -v xargs >/dev/null 2>&1
-then
-    die "xargs is not available"
-fi
-
-# Use "xargs" to parse quoted args.
-#
-# With -n1 it outputs one arg per line, when -r it skips empty lines.
-# IFS is set to newline as this is the only character that cannot occur in filenames.
-# The triple backslash is an escaped backslash and IFS ends up as a newline.
-#
-# We use "printf %s" to avoid issues with the shell's echo builtin.
-# The printf command replaces each newline with the string from IFS, which is newline,
-# making each arg be on a new line as required.
-#
-# IFS needs to be saved before the command substitution below so that it takes precedence
-# over a user defined IFS which has the last non-newline character as IFS.
-# This is the "true" terminal "new line" character.
-SAVED_IFS="$IFS"
-IFS="$(printf '\n')"
-eval "set -- $(printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" | xargs printf '%s\n')" -- "$(printf '%s\n' "$@" | xargs printf '%s\n')"
-IFS="$SAVED_IFS"
-exec "$JAVACMD" "$@"
