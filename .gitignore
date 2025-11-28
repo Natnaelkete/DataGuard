@@ -62,7 +62,7 @@ app.*.map.json
 /app/release
 
 # Gradle wrapper
-gradle-wrapper.jar
+# gradle-wrapper.jar is committed to version control for CI/CD
 
 # Kotlin
 .kotlin/
