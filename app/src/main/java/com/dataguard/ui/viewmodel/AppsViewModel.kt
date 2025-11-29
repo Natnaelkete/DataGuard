@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,13 +47,16 @@ class AppsViewModel @Inject constructor(
             try {
                 getUsageStatsUseCase("daily")
                 
-                // Collect latest usage
-                repository.getLatestUsage().collect { usage ->
+                // Get latest usage
+                try {
+                    val usage = repository.getLatestUsage().first()
                     if (usage != null) {
                         val type = object : TypeToken<List<AppDataUsage>>() {}.type
                         val apps = gson.fromJson<List<AppDataUsage>>(usage.topAppsJson, type) ?: emptyList()
                         _topApps.value = apps.sortedByDescending { it.totalBytes }
                     }
+                } catch (e: Exception) {
+                    _topApps.value = emptyList()
                 }
             } catch (e: Exception) {
                 _error.value = e.message

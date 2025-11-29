@@ -51,10 +51,20 @@ class SettingsViewModel @Inject constructor(
 
     fun requestBatteryOptimizationExemption() {
         permissionHelper.requestBatteryOptimizationExemption()
+        // Schedule a check after a delay to allow user to grant permission
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(500)
+            checkPermissions()
+        }
     }
 
     fun requestNotificationPermission() {
         permissionHelper.requestNotificationPermission()
+        // Schedule a check after a delay to allow user to grant permission
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(500)
+            checkPermissions()
+        }
     }
 
     fun setDailyLimit(limitMB: Long) {
