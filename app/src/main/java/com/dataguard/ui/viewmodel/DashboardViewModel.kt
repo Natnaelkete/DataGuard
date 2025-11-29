@@ -48,22 +48,46 @@ class DashboardViewModel @Inject constructor(
             _isLoading.value = true
             try {
                 getUsageStatsUseCase("daily")
+                
+                // Collect latest usage
                 repository.getLatestUsage().collect { usage ->
                     _latestUsage.value = usage
-                }
-                repository.getUsageByPeriod("daily", 100).collect { usage ->
-                    _dailyUsage.value = usage
-                }
-                repository.getUsageByPeriod("weekly", 100).collect { usage ->
-                    _weeklyUsage.value = usage
-                }
-                repository.getUsageByPeriod("monthly", 100).collect { usage ->
-                    _monthlyUsage.value = usage
                 }
             } catch (e: Exception) {
                 _error.value = e.message
             } finally {
                 _isLoading.value = false
+            }
+        }
+        
+        // Load period data in separate coroutines to avoid blocking
+        viewModelScope.launch {
+            try {
+                repository.getUsageByPeriod("daily", 100).collect { usage ->
+                    _dailyUsage.value = usage
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+        
+        viewModelScope.launch {
+            try {
+                repository.getUsageByPeriod("weekly", 100).collect { usage ->
+                    _weeklyUsage.value = usage
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+        
+        viewModelScope.launch {
+            try {
+                repository.getUsageByPeriod("monthly", 100).collect { usage ->
+                    _monthlyUsage.value = usage
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
             }
         }
     }

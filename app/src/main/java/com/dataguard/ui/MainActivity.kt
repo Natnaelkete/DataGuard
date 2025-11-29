@@ -28,10 +28,15 @@ import com.dataguard.ui.screen.DashboardScreen
 import com.dataguard.ui.screen.SettingsScreen
 import com.dataguard.ui.screen.StatsScreen
 import com.dataguard.ui.theme.DataGuardTheme
+import com.dataguard.utils.PermissionHelper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var permissionHelper: PermissionHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

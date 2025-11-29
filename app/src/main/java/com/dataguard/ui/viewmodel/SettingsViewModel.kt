@@ -53,6 +53,10 @@ class SettingsViewModel @Inject constructor(
         permissionHelper.requestBatteryOptimizationExemption()
     }
 
+    fun requestNotificationPermission() {
+        permissionHelper.requestNotificationPermission()
+    }
+
     fun setDailyLimit(limitMB: Long) {
         _dailyLimitMB.value = limitMB
     }

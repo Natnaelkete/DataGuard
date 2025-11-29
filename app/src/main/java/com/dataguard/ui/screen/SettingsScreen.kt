@@ -93,7 +93,7 @@ fun SettingsScreen(
             title = "Notifications",
             description = "Allow DataGuard to send notifications",
             isGranted = hasNotificationPermission,
-            onRequestClick = { /* Handled by system */ }
+            onRequestClick = { viewModel.requestNotificationPermission() }
         )
 
         Spacer(modifier = Modifier.height(8.dp))

@@ -45,6 +45,8 @@ class AppsViewModel @Inject constructor(
             _isLoading.value = true
             try {
                 getUsageStatsUseCase("daily")
+                
+                // Collect latest usage
                 repository.getLatestUsage().collect { usage ->
                     if (usage != null) {
                         val type = object : TypeToken<List<AppDataUsage>>() {}.type
@@ -52,13 +54,21 @@ class AppsViewModel @Inject constructor(
                         _topApps.value = apps.sortedByDescending { it.totalBytes }
                     }
                 }
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
+        }
+        
+        // Load blocked apps in separate coroutine
+        viewModelScope.launch {
+            try {
                 repository.getAllBlockedApps().collect { blocked ->
                     _blockedApps.value = blocked
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-            } finally {
-                _isLoading.value = false
             }
         }
     }
