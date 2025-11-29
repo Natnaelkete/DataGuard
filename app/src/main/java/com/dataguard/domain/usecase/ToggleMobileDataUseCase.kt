@@ -49,19 +49,14 @@ class ToggleMobileDataUseCase @Inject constructor(
 
     private fun toggleViaConnectivityManager(enabled: Boolean): Boolean {
         return try {
-            // Note: This requires CHANGE_NETWORK_STATE permission
-            // Modern Android versions restrict this, so we fallback to Settings intent
-            // startUsingNetworkFeature and stopUsingNetworkFeature are deprecated
-            // Use TelephonyManager instead
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // For Android 8+, use TelephonyManager
-                val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-                // Note: setDataEnabled is hidden API, fallback to Settings
-                false
-            } else {
-                false
-            }
+            // Modern Android (8+) restricts direct mobile data toggling
+            // We need to open the mobile data settings for user to toggle manually
+            val intent = Intent(Settings.ACTION_DATA_ROAMING_SETTINGS)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+            true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
@@ -73,6 +68,7 @@ class ToggleMobileDataUseCase @Inject constructor(
             context.startActivity(intent)
             true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }

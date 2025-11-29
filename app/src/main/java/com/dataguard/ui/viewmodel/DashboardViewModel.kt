@@ -100,7 +100,9 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             val result = toggleMobileDataUseCase(enabled)
             if (result is ToggleMobileDataUseCase.Result.Error) {
-                _error.value = result.message
+                _error.value = "Please toggle mobile data manually in Settings"
+            } else {
+                _error.value = "Opening mobile data settings..."
             }
         }
     }

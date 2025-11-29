@@ -10,6 +10,7 @@ import com.dataguard.data.entity.UsageEntity
 import com.dataguard.data.repository.DataRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -23,16 +24,36 @@ class GetUsageStatsUseCase @Inject constructor(
 
     suspend operator fun invoke(period: String = "daily"): Result = withContext(Dispatchers.Default) {
         try {
-            val totalTx = TrafficStats.getMobileTxBytes()
-            val totalRx = TrafficStats.getMobileRxBytes()
+            val currentTx = TrafficStats.getMobileTxBytes()
+            val currentRx = TrafficStats.getMobileRxBytes()
+
+            // Get the previous usage to calculate delta
+            val previousUsage = try {
+                repository.getLatestUsage().first()
+            } catch (e: Exception) {
+                null
+            }
+
+            // Calculate delta (difference from previous reading)
+            val deltaTx = if (previousUsage != null) {
+                currentTx - previousUsage.totalMobileTx
+            } else {
+                currentTx
+            }
+
+            val deltaRx = if (previousUsage != null) {
+                currentRx - previousUsage.totalMobileRx
+            } else {
+                currentRx
+            }
 
             val topApps = getTopDataConsumingApps(10)
             val topAppsJson = gson.toJson(topApps)
 
             val usage = UsageEntity(
                 timestamp = System.currentTimeMillis(),
-                totalMobileTx = totalTx,
-                totalMobileRx = totalRx,
+                totalMobileTx = deltaTx,
+                totalMobileRx = deltaRx,
                 topAppsJson = topAppsJson,
                 period = period
             )
